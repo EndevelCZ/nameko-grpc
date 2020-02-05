@@ -2,12 +2,12 @@
 import json
 
 
-METADATA_PREFIX = "x-nameko-"
+METADATA_PREFIX = ""
 
 
 def encode_value(value):
     # TODO use nameko.serialization
-    return json.dumps(value)
+    return json.dumps(value) if not isinstance(value, (str, )) else value
 
 
 def decode_value(value):
@@ -37,9 +37,9 @@ def context_data_from_metadata(metadata):
     data = {}
 
     for name, value in metadata:
-        if name.startswith(METADATA_PREFIX):
+        if METADATA_PREFIX and name.startswith(METADATA_PREFIX):
             _, key = name.split(METADATA_PREFIX, 1)
-            data[key] = decode_value(value)
+            data[key] = value  # decode_value(value)
         else:
             if name in data:
                 try:
